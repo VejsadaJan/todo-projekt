@@ -192,6 +192,7 @@ function fetchAllCards() {
 		.then(cards => {
 			cards.forEach(card => {
 				createNewCard(cardContainer, card)
+				
 			});
 		});
 }

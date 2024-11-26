@@ -1,25 +1,22 @@
 /**
  * IMPORTS
- */
+
 import { createClient } from '@supabase/supabase-js';
 
 
 /**
  * CONNECT TO DATABASE
- */ 
-const supabaseUrl = 'https://yebmnqoazqlfgriinkdg.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InllYm1ucW9henFsZmdyaWlua2RnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzIwMzk5MDAsImV4cCI6MjA0NzYxNTkwMH0.lPML-Ak_HCLYjPW2xK1BqAJy3NQHYabVXRC0rxk6IGA';
-const supabase = createClient(supabaseUrl, supabaseKey); 
+  
+const supabaseUrl = '';
+const supabaseKey = '';
+const supabase = createClient(supabaseUrl, supabaseKey);  
+*/
 
-/* appwrite
 
 import { Client } from 'appwrite';
 
 const client = new Client();
 client.setProject('67430862002f1a00b7e1');
-
-*/
-
 
 
 /**
@@ -36,7 +33,10 @@ export async function fetchCards() {
 		return false;
 	}
 
+	//console.log('cards '+ cards);
 	return cards;
+
+	
 }
 
 
