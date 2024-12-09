@@ -1,42 +1,40 @@
 /**
  * IMPORTS
-
-import { createClient } from '@supabase/supabase-js';
-
-
-/**
- * CONNECT TO DATABASE
-  
-const supabaseUrl = '';
-const supabaseKey = '';
-const supabase = createClient(supabaseUrl, supabaseKey);  
 */
+import { Client, Databases, Query, ID } from "appwrite";
+
+/* APPWRITE */
+
+const client = new Client()
+    .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
+    .setProject('67430862002f1a00b7e1'); // Your project ID
+
+const databases = new Databases(client);
 
 
-import { Client } from 'appwrite';
-
-const client = new Client();
-client.setProject('67430862002f1a00b7e1');
+/* FETCH APPwrite */
 
 
-/**
- * FETCH ALL CARDS FROM SERVER
- */
 export async function fetchCards() {
-	let { data: cards, error } = await supabase
-		.from('cards')
-		.select('*');
 
-	// oops!!
-	if (error) {
-		console.error(error);
-		return false;
-	}
 
-	//console.log('cards '+ cards);
-	return cards;
 
+	const response = await databases.listDocuments(
+		'6743087b003027b1764f', // databaseId
+		'6744bcd5001fa49686f7', // collectionId
+		[ 		
+		
+			Query.select(["title", "content", "$id"])
+			
+		] // queries (optional)
+	);
 	
+	 //console.log(response.documents);
+	
+	const cards = response.documents;
+
+	return cards;
+  
 }
 
 
@@ -44,7 +42,7 @@ export async function fetchCards() {
  * FETCH ONE CARD
  */
 export async function fetchCard(id) {
-	let { data: cards, error } = await supabase
+	let { data: cards, error } = await databases
 		.from('cards')
 		.select('*')
 		.eq('id', id)
@@ -63,59 +61,58 @@ export async function fetchCard(id) {
  * INSERT NEW CARD
  */
 export async function insertCard(title, content) {
-	const { data, error } = await supabase
-		.from('cards')
-		.insert([
-			{ title, content },
-		])
-		.select();
+    try {
+        const response = await databases.createDocument(
+            '6743087b003027b1764f', // ID databáze
+            '6744bcd5001fa49686f7', // ID kolekce
+            'unique()', // Automaticky generované unikátní ID dokumentu
+            { title, content } // Data k uložení
+        );
+        return response;
 
-	// oops!!
-	if (error) {
-		console.error(error.message);
-		return false;
-	};
-
-	return data;
+    } catch (error) {
+        console.error(error.message);
+        return false;
+    }
 }
 
 
-/**
- * UPDATE CARD
- */
 export async function updateCard(id, title, content) {
-	const { data, error } = await supabase
-		.from('cards')
-		.update({
-			title, content
-		})
-		.eq('id', id)
-		.select()
+    	
+    try {
+        const response = await databases.updateDocument(
+            "6743087b003027b1764f", // Zadejte ID vaší databáze
+            "6744bcd5001fa49686f7", // Zadejte ID vaší kolekce
+            id, // ID dokumentu, který chcete aktualizovat
+            { title, content } // Nová data pro aktualizaci
+        );
 
-	// oops!! handle this better 
-	if (error) {
-		console.error(error.message);
-		return false;
-	};
-
-	return data;
+        return response; // Vrací aktualizovaný dokument
+    } catch (error) {
+        console.error("Chyba při aktualizaci karty:", error.message);
+        return false; // Můžete vrátit `null` nebo jiný indikátor chyby, pokud preferujete
+    }
 }
 
 
-/**
- * DELETE CARD 
- */
+
+
 export async function deleteCard(id) {
-	const { error } = await supabase
-		.from('cards')
-		.delete()
-		.eq('id', id)
+	
+	//console.log('Smazané ID: ' + id);
 
-	// oops!!
-	if (error) {
-		console.error(error.message);
+	try {
+		await databases.deleteDocument(
+			'6743087b003027b1764f', // databaseId
+			'6744bcd5001fa49686f7', // collectionId
+			id // zde použijeme hodnotu proměnné id
+		);
+		console.log("Karta byla úspěšně smazána.");
+		return true;
+	} catch (error) {
+		console.error("Chyba při mazání karty:", error);
 		return false;
-	};
-
-	return true;
+	}
 }
+	
+

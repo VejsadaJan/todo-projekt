@@ -5,6 +5,8 @@ import * as db from './database.js';
 import 'animate.css';
 
 
+
+
 /**
  * SELECT HTML ELEMENTS
  */
@@ -17,19 +19,27 @@ const inputContent = form.querySelector('input[name=content]');
 /**
  * CREATE NEW CARD ELEMENT, INSERT INTO DOM
  */
+
+
 function createNewCard(container, card) {
 	const newCard = document.createElement('li');
 	newCard.className = 'card animate__animated animate__tada animate__faster';
-	newCard.setAttribute('id', 'card-' + card.id);
+	newCard.setAttribute('id', `${card.$id}`); 	// Nastavení jedinečného ID z Appwrite
+	
+	
+	//newCard.setAttribute('id', 'card-' + card.id);
 
 	newCard.innerHTML = `
 		<h3 class="card-title">${card.title}</h3>
 		<p class="card-content">${card.content}</p>
-		<a href="?action=delete&id=${card.id}" class="delete-button">✕</a>
+		<a href="?action=delete&id=${card.$id}" class="delete-button">✕</a>
+			
 	`;
 
+	
 	// novo vytvoreny element pridam do rodica
 	container.prepend(newCard);
+	// console.log('hotovo 👍');
 }
 
 
@@ -101,11 +111,18 @@ cardContainer.addEventListener('dblclick', function (event) {
 	const isTitle = clickedElement.classList.contains('card-title');
 	const isContent = clickedElement.classList.contains('card-content');
 
+	
 	// ak sme double-clickli bud na nadpis alebo text cardu
 	if (isTitle || isContent) {
 		// card ma v id povedzme card-57, najdeme z toho cislo 57
 		const cardElement = clickedElement.parentNode;
-		const id = Number(cardElement.id.replace('card-', ''));
+
+		
+
+		//const id = Number(cardElement.id.replace('card-', ''));
+
+		const id = cardElement.id;
+
 
 		// zmenime dvojkliknuty element na editovatelny
 		clickedElement.setAttribute('contenteditable', true);
@@ -118,6 +135,8 @@ cardContainer.addEventListener('dblclick', function (event) {
 
 			const newTitle = cardElement.querySelector('.card-title').textContent;
 			const newContent = cardElement.querySelector('.card-content').textContent;
+
+			console.log ('id edit ' + id);
 
 			db.updateCard(id, newTitle, newContent)
 				.then(() => console.log('updated 👍'));
@@ -210,3 +229,6 @@ function fetchOneCard(id) {
 			createNewCard(cardContainer, card);
 		});
 }
+
+
+
