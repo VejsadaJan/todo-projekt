@@ -29,7 +29,7 @@ export async function fetchCards() {
 		] // queries (optional)
 	);
 	
-	 //console.log(response.documents);
+	//console.log(response.documents);
 	
 	const cards = response.documents;
 
@@ -55,6 +55,9 @@ export async function fetchCard(id) {
 
 	return cards;
 }
+
+
+
 
 
 /**

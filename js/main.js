@@ -39,7 +39,7 @@ function createNewCard(container, card) {
 	
 	// novo vytvoreny element pridam do rodica
 	container.prepend(newCard);
-	// console.log('hotovo 👍');
+    // console.log('hotovo 👍');
 }
 
 
@@ -56,16 +56,27 @@ form.addEventListener('keyup', async function (event) {
 	// we need both title and text
 	if (!inputTitle.value || !inputContent.value) return;
 
+
+
+	
 	// insert new card into db
 	db.insertCard(inputTitle.value, inputContent.value)
+
 		.then(cards => {
 			if (cards) {
-				const card = cards[0];
+				const card = cards;
 				createNewCard(cardContainer, card);
 				resetForm();
 			}
 		});
-});
+	});
+
+
+
+
+
+
+
 
 
 /**
@@ -136,7 +147,7 @@ cardContainer.addEventListener('dblclick', function (event) {
 			const newTitle = cardElement.querySelector('.card-title').textContent;
 			const newContent = cardElement.querySelector('.card-content').textContent;
 
-			console.log ('id edit ' + id);
+			//console.log ('id edit ' + id);
 
 			db.updateCard(id, newTitle, newContent)
 				.then(() => console.log('updated 👍'));
@@ -192,6 +203,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		id = params.has('id') ? params.get('id') : false;
 	}
 
+	//console.log('idecko', id);
+
 	// ak mame id-cko, chceme zobrazit 1 konretny card podla idcka
 	// v opacnom pripade chceme zobrazit vsetky cards
 	if (id) {
@@ -207,14 +220,18 @@ document.addEventListener('DOMContentLoaded', function () {
  * FETCH ALL CARDS
  */
 function fetchAllCards() {
+	//console.log('kontrola card ', card);
+
 	db.fetchCards()
 		.then(cards => {
 			cards.forEach(card => {
 				createNewCard(cardContainer, card)
+				//console.log('id', card.$id);
 				
 			});
 		});
 }
+
 
 
 /**
